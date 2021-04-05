@@ -5,17 +5,14 @@ const {ensureAuth, ensureGuest} = require('../middleware/auth')
 const User = require('../models/User')
 
 router.get('/',ensureGuest,(req,res)=>{
-    var html = "<ul>\
-            <li><a href='/auth/google'>Google</a></li>\
-    </ul>"
-    res.send(html)
+    res.sendFile("/home/byte-rider/Desktop/I-Mtech-IIITB(Sem-8)/SPE/project/TodoBackend/views/land.html")
 })
 
 
 router.get('/dashboard',ensureAuth, async (req,res)=>{
     try {
         const myuser = await User.findOne({_id : req.user.id}).lean()
-        var html = "<h1> Hi "+myuser.firstName+"</h1><a href='/auth/logout'>logout</a>"   
+        var html = "<h1> Hi "+myuser.firstName+"</h1><a href='/auth/logout'>logout</a><a href='views/'>"   
         res.send(html)
     } catch (err) {
         console.log(err)

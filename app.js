@@ -5,11 +5,12 @@ const morgan = require('morgan')
 const passport = require('passport')
 const session = require('express-session')
 const MongoStore = require('connect-mongo')(session)
-const cors = require("cors");
+const cors = require("cors")
+const path = require("path")
 
 //Local requires
 const connectDB = require('./config/db')
-
+const { swaggerUi,specs } = require('./swagger')
 
 //Configuration
 dotenv.config({ path: './config/config.env' })
@@ -35,15 +36,13 @@ if(MODE === 'development'){
 }
 
 //Static UI 
-// const path = __dirname + '/views/';
-// app.use(express.static(path));
 
 //CORS Support
 var corsOptions = {
     origin: "http://localhost:3000"
   };
   
-  app.use(cors(corsOptions));
+app.use(cors(corsOptions));
 
 //Parsing and rest api handling
 app.use(express.urlencoded({ extended: false }))
@@ -54,6 +53,9 @@ app.use(function (req,res,next){
     res.locals.user = res.user || null
     next()
 })
+
+//SWagger docs
+app.use('/api-docs',swaggerUi.serve,swaggerUi.setup(specs))
 
 // Sessions for remembering data
 app.use(
@@ -70,11 +72,10 @@ app.use(passport.initialize())
 app.use(passport.session())
 
 
-
 //Routes
 app.use('/',require('./routes/index'))
 app.use('/auth',require('./routes/auth'))
-
+app.use('/note',require('./routes/note'))
 
 
 //running the app

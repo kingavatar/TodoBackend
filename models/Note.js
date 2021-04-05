@@ -33,4 +33,4 @@ const NoteSchema = new mongoose.Schema({
 )
 
 
-module.exports = mongoose.models('Note',NoteSchema)
+module.exports = mongoose.model('Note',NoteSchema)
