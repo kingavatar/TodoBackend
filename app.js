@@ -44,6 +44,11 @@ var corsOptions = {
   
 app.use(cors(corsOptions));
 
+
+//Views
+app.use(express.static(__dirname + '/views'));
+
+
 //Parsing and rest api handling
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())

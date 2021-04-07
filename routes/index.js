@@ -5,7 +5,7 @@ const {ensureAuth, ensureGuest} = require('../middleware/auth')
 const User = require('../models/User')
 
 router.get('/',ensureGuest,(req,res)=>{
-    res.sendFile("/home/byte-rider/Desktop/I-Mtech-IIITB(Sem-8)/SPE/project/TodoBackend/views/land.html")
+    res.sendFile("land.html",{root: './views'})
 })
 
 

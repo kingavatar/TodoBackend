@@ -8,7 +8,7 @@ const Note = require('../models/Note')
 //Redirect to create a note page
 router.get('/add',ensureAuth, (req,res)=>{
     //RENDER THE ADDING PAGE
-    res.sendFile('/home/byte-rider/Desktop/I-Mtech-IIITB(Sem-8)/SPE/project/TodoBackend/views/add.html')
+    res.sendFile('add.html',{root: './views'})
 })
 
 //Ceate a note
