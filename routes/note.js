@@ -131,16 +131,12 @@ router.delete('/:id',ensureAuth,async (req,res)=>{
     }
 })
 
-
-
-
-
 //API to get all notes specific to web page
 router.get('/websites/:wsite',ensureAuth,async (req,res)=>{
     try {
         //Look into here
         let link = myTrim(req.params.wsite)
-        let notes = Note.find({myLink:{$regex: link}})
+        let notes = Note.find({myLink:{$regex: link},timer:{$gte:new Date(Date.now())}})
         if(!notes || notes.length==0){
             //No website specific notes
         }
@@ -154,4 +150,6 @@ router.get('/websites/:wsite',ensureAuth,async (req,res)=>{
     }
 })
 
+
+//
 module.exports = router

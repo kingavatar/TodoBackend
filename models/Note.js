@@ -1,4 +1,6 @@
 const mongoose = require('mongoose')
+const constants = require('../config/constants')
+
 
 const NoteSchema = new mongoose.Schema({
     title:{
@@ -25,8 +27,12 @@ const NoteSchema = new mongoose.Schema({
         type:String,
         required: false,
         default: 'null'
+    },
+    timer:{
+        type: Date, 
+        required: true,
+        default:  new Date(+new Date() + constants.ONEDAY)
     }
-    
     },
     { timestamps: true }
     

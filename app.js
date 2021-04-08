@@ -45,8 +45,6 @@ var corsOptions = {
 app.use(cors(corsOptions));
 
 
-//Views
-app.use(express.static(__dirname + '/views'));
 
 
 //Parsing and rest api handling

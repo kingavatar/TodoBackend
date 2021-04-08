@@ -16,5 +16,5 @@ jobs:
         with:
           context: .
           push: true
-          tags: byterider/todoBackend:latest
+          tags: todov100/todoBackend:latest
 
