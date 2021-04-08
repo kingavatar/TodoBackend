@@ -15,7 +15,6 @@ jobs:
       - name: Docker Build Push
         uses: docker/build-push-action@v2
         with:
-          context: .
           push: true
           tags: todov100/todobackend:latest
 
