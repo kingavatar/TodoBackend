@@ -32,6 +32,11 @@ const NoteSchema = new mongoose.Schema({
         type: Date, 
         required: true,
         default:  new Date(+new Date() + constants.ONEDAY)
+    },
+    pageId:{
+        type: mongoose.Schema.Types.ObjectId,
+        required: false,
+        ref: 'Page'
     }
     },
     { timestamps: true }

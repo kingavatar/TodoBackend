@@ -121,4 +121,22 @@ router.get('/facebook/callback', passport.authenticate('facebook',{failureRedire
 
 
 
+//Github OAuth
+router.get('/github',passport.authenticate('github'))
+
+/**
+ * @swagger
+ * /auth/facebook/callback:
+ *   get:
+ *     description: FB callback
+ *     responses:
+ *       200:
+ *         description: please don't click these
+ */
+router.get('/github/callback', passport.authenticate('github',{failureRedirect: '/' }),
+     (req,res)=>{
+        res.redirect('/dashboard')
+    }
+)
+
 module.exports = router
