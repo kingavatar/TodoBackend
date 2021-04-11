@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "start": "cross-env NENV=production node app",
-    "dev": "cross-env NENV=development nodemon app"
+    "dev": "cross-env NENV=development nodemon app",
+    "swaggerUi": "node swagger.js"
   },
   "repository": {
     "type": "git",
@@ -33,6 +34,7 @@
     "passport-google-oauth20": "^2.0.0",
     "passport-local": "^1.0.0",
     "path": "^0.12.7",
+    "swagger-autogen": "^2.7.8",
     "swagger-jsdoc": "^6.1.0",
     "swagger-ui-express": "^4.1.6"
   },

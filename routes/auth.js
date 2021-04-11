@@ -128,6 +128,7 @@ router.get('/github',passport.authenticate('github'))
  * @swagger
  * /auth/facebook/callback:
  *   get:
+ *     tags: User
  *     description: FB callback
  *     responses:
  *       200:

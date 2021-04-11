@@ -11,6 +11,7 @@ router.get('/',ensureGuest,(req,res)=>{
 
 router.get('/dashboard',ensureAuth, async (req,res)=>{
     try {
+        
         const myuser = await User.findOne({_id : req.user.id}).lean()
         var html = "<h1> Hi "+myuser.firstName+"</h1><a href='/auth/logout'>logout</a><a href='views/'>"   
         res.send(html)

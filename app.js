@@ -7,11 +7,12 @@ const session = require('express-session')
 const MongoStore = require('connect-mongo')(session)
 const cors = require("cors")
 const path = require("path")
-
+const swaggerUi = require("swagger-ui-express")
 //Local requires
 const connectDB = require('./config/db')
-const { swaggerUi,specs } = require('./swagger')
-
+// const { swaggerUi,specs } = require('./swagger')
+const swaggerFile = require('./swagger_output.json')
+// const { swaggerUi } = require('./swagger')
 //Configuration
 dotenv.config({ path: './config/config.env' })
 
@@ -58,7 +59,9 @@ app.use(function (req,res,next){
 })
 
 //SWagger docs
-app.use('/api-docs',swaggerUi.serve,swaggerUi.setup(specs))
+// app.use('/api-docs',swaggerUi.serve,swaggerUi.setup(specs))
+app.use('/doc',swaggerUi.serve,swaggerUi.setup(swaggerFile))
+
 
 // Sessions for remembering data
 app.use(
@@ -80,6 +83,7 @@ app.use('/',require('./routes/index'))
 app.use('/auth',require('./routes/auth'))
 app.use('/note',require('./routes/note'))
 app.use('/admin',require('./routes/stats'))
+app.use('/page',require('./routes/page'))
 
 
 //running the app
