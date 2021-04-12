@@ -11,10 +11,16 @@ router.get('/add',ensureAuth, (req,res)=>{
     res.sendFile('add.html',{root: './views'})
 })
 
+//HOW DO I GET THE PAGE ID.
+//TODO:
 //Ceate a note
 router.post('/add',ensureAuth,async (req,res)=>{
     try {
+        pageId = null // DANGER PLEASE CHANGE THIS
         req.body.ownerId = req.user.id
+        var p = req.body
+        //CHECK PAGE ID
+        p.pageId = pageId
         await Note.create(req.body)
         
         //Redirect to dashboard or this story
@@ -22,6 +28,7 @@ router.post('/add',ensureAuth,async (req,res)=>{
 
     } catch (error) {
         // RENDER 500
+        //TODO:
         console.log(error)
     }
 })
@@ -54,6 +61,7 @@ router.get('/:id',ensureAuth, async (req,res)=>{
         }
         
     } catch (error) {
+        //TODO:
         console.log('resoruce not there')
     }
 })
@@ -66,17 +74,21 @@ router.get('/edit/:id',ensureAuth,async (res,req)=>{
         const note = await Note.findOne({_id: req.params.id}).lean()
         if(!story){
             //RETURN 404
+                    //TODO:
         }
         if(story.ownerId != req.user.id){
             //NOT EDITABLE 
+                    //TODO:
         }
         else{
             //RENDER THE STORY
+                    //TODO:
             res.send(note)
         }
 
     } catch (error) {
         //RETURN 500 
+        //TODO:
     }
 
 })
@@ -88,22 +100,27 @@ router.get('/:id',ensureAuth,async (res,req)=>{
         let note = await Note.findOne({_id: req.params.id}).lean()
         if(!story){
             //RETURN 404
+            //TODO:
         }
         if(story.ownerId != req.user.id){
             //NOT EDITABLE 
+            //TODO:
         }
         else{
             //RENDER THE STORY
+            //TODO:
             note = await Note.findOneAndUpdate({ _id: req.params.id }, req.body, {
                 new: true,
                 runValidators: true,
               })
             //REDIRECT
+            //TODO:
             res.redirect('/dashboard')
         }
 
     } catch (error) {
-        //RETURN 500 
+        //RETURN 500
+        //TODO: 
     }
 
 })
@@ -114,6 +131,7 @@ router.delete('/:id',ensureAuth,async (req,res)=>{
         if(!note){
             console.log('no story')
             // ERROR 404
+            //TODO:
         }
         else{
             if(note.ownerId != req.user.id){
@@ -128,6 +146,7 @@ router.delete('/:id',ensureAuth,async (req,res)=>{
     } catch (error) {
         console.log('0000')
         //ERROR 503        
+        //TODO:
     }
 })
 
@@ -139,13 +158,15 @@ router.get('/websites/:wsite',ensureAuth,async (req,res)=>{
         let notes = Note.find({myLink:{$regex: link},timer:{$gte:new Date(Date.now())}})
         if(!notes || notes.length==0){
             //No website specific notes
+            //TODO:
         }
         else{
             //Have to return the list of all notes
-            
+            //TODO:
         }
     } catch (error) {
         //ERROR
+        //TODO:
         console.log(error)
     }
 })

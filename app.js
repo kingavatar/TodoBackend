@@ -8,11 +8,16 @@ const MongoStore = require('connect-mongo')(session)
 const cors = require("cors")
 const path = require("path")
 const swaggerUi = require("swagger-ui-express")
+
+
 //Local requires
-const connectDB = require('./config/db')
+const {connectDB,connectProductionDB} = require('./config/db')
 // const { swaggerUi,specs } = require('./swagger')
 const swaggerFile = require('./swagger_output.json')
 // const { swaggerUi } = require('./swagger')
+
+
+
 //Configuration
 dotenv.config({ path: './config/config.env' })
 
@@ -25,7 +30,12 @@ const MODE = process.env.NENV
 
 
 //Connect to database
-connectDB()
+if(MODE === 'development'){
+  connectDB()
+}
+else{
+  connectProductionDB()
+}
 
 //Application
 const app = express()

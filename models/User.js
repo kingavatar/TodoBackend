@@ -28,6 +28,17 @@ const UserSchema = new mongoose.Schema({
         required: false,
         default: null
     },
+    githubId:{
+        type: String, 
+        required: false,
+        default: null
+    },
+    pages:{
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: 'Page',
+        required: true,
+        default: []
+    },
     email: {
         type: String,
         require: false 

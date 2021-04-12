@@ -18,11 +18,6 @@ const NoteSchema = new mongoose.Schema({
         ref: 'User',
         required: true
     },
-    viewers:{
-        type: [mongoose.Schema.Types.ObjectId],
-        ref: 'User',
-        default: []
-    },
     myLink:{
         type:String,
         required: false,
@@ -38,6 +33,7 @@ const NoteSchema = new mongoose.Schema({
         required: false,
         ref: 'Page'
     }
+    
     },
     { timestamps: true }
     
