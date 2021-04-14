@@ -11,18 +11,17 @@ const NoteSchema = new mongoose.Schema({
     content:{
         type: String,
         required: true,
-
     },
     ownerId:{ 
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true
     },
-    myLink:{
-        type:String,
-        required: false,
-        default: 'null'
-    },
+    // myLink:{
+    //     type:String,
+    //     required: false,
+    //     default: 'null'
+    // },
     timer:{
         type: Date, 
         required: true,

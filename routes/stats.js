@@ -4,6 +4,7 @@ const router = express.Router()
 const {ensureAuth} = require('../middleware/auth')
 const User = require('../models/User')
 const Note = require('../models/Note')
+const Page = require('../models/Page')
 
 
 router.get('/getstats',ensureAuth,async (req,res)=>{
@@ -12,22 +13,16 @@ router.get('/getstats',ensureAuth,async (req,res)=>{
         // res.render('')
     }
     else{
-        // User.estimatedDocumentCount({},function(err,result){
-        //     if(err){
-        //         //RENDER ERROR
-        //     }
-        //     else{
-        //         //Send stats
-        //         var users = result-1;
-        //     }
-        // })
         var users = await User.estimatedDocumentCount();
         var notes = await Note.estimatedDocumentCount();
-        // res.send(users)
-        console.log(users)
+        var pages = await Page.estimatedDocumentCount();
+        var domains = 0 //;
+        console.log(users-1)
         console.log(notes)
         //RETURN VALUES users, notes
     }
 })
+
+
 
 module.exports = router

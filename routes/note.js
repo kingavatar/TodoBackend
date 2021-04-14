@@ -4,6 +4,7 @@ const JSON = require('JSON')
 const {ensureAuth} = require('../middleware/auth')
 const {myRegex} = require('../helpers/extension') 
 const Note = require('../models/Note')
+const Page = require('../models/Page')
 
 //Redirect to create a note page
 router.get('/add',ensureAuth, (req,res)=>{
@@ -16,16 +17,22 @@ router.get('/add',ensureAuth, (req,res)=>{
 //Ceate a note
 router.post('/add',ensureAuth,async (req,res)=>{
     try {
-        pageId = null // DANGER PLEASE CHANGE THIS
-        req.body.ownerId = req.user.id
-        var p = req.body
-        //CHECK PAGE ID
-        p.pageId = pageId
-        await Note.create(req.body)
+        // TODO: create new page if pageId === empty
+        let pageId = null // DANGER PLEASE CHANGE THIS
+        let myLink = '' //
         
-        //Redirect to dashboard or this story
-        res.redirect('/dashboard')
+        if(!pageId || pageId==undefined){
+            let page = await Page.create({'ownerId':user.id})
+            pageId = page._id
+        }
+        
+        req.body.ownerId = req.user.id
+        req.body.pageId = pageId
 
+        let note = await Note.create(req.body)
+        
+        return note._id
+   
     } catch (error) {
         // RENDER 500
         //TODO:
@@ -40,6 +47,7 @@ router.get('/:id',ensureAuth, async (req,res)=>{
         if(!note){
             console.log('not found 404')
             // ERROR PAGE TO BE RENDERED
+            // TODO:
         }
         else{
             console.log(note.ownerId == req.user.id);
@@ -47,12 +55,13 @@ router.get('/:id',ensureAuth, async (req,res)=>{
             if(note.ownerId != req.user.id && !note.viewers.includes(req.user.id)){
                 console.log('permission denied')
                 //PERMISSION DENIED
+                // TODO:
             }
             else if(note.ownerId == req.user.id){
                 console.log('Owner')
-                
                 res.send(note)
                 //OWNER CAN EDIT
+                // TODO:
             }
             else{
                 // VIEWER CAN SEE
@@ -68,35 +77,35 @@ router.get('/:id',ensureAuth, async (req,res)=>{
 
 
 
-// Routing to the edit option
-router.get('/edit/:id',ensureAuth,async (res,req)=>{
-    try {
-        const note = await Note.findOne({_id: req.params.id}).lean()
-        if(!story){
-            //RETURN 404
-                    //TODO:
-        }
-        if(story.ownerId != req.user.id){
-            //NOT EDITABLE 
-                    //TODO:
-        }
-        else{
-            //RENDER THE STORY
-                    //TODO:
-            res.send(note)
-        }
+// // Routing to the edit option
+// router.get('/edit/:id',ensureAuth,async (res,req)=>{
+//     try {
+//         const note = await Note.findOne({_id: req.params.id}).lean()
+//         if(!story){
+//             //RETURN 404
+//                     //TODO:
+//         }
+//         if(story.ownerId != req.user.id){
+//             //NOT EDITABLE 
+//                     //TODO:
+//         }
+//         else{
+//             //RENDER THE STORY
+//                     //TODO:
+//             res.send(note)
+//         }
 
-    } catch (error) {
-        //RETURN 500 
-        //TODO:
-    }
-
-})
+//     } catch (error) {
+//         //RETURN 500 
+//         //TODO:
+//     }
+// })
 
 
 //Actually editing the note
-router.get('/:id',ensureAuth,async (res,req)=>{
+router.put('/:id',ensureAuth,async (res,req)=>{
     try {
+        // id, content
         let note = await Note.findOne({_id: req.params.id}).lean()
         if(!story){
             //RETURN 404
@@ -112,10 +121,8 @@ router.get('/:id',ensureAuth,async (res,req)=>{
             note = await Note.findOneAndUpdate({ _id: req.params.id }, req.body, {
                 new: true,
                 runValidators: true,
-              })
-            //REDIRECT
+            })
             //TODO:
-            res.redirect('/dashboard')
         }
 
     } catch (error) {

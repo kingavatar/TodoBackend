@@ -15,7 +15,7 @@ const router = express.Router()
  *       200:
  *         description: Please don't use this
  */
-router.get('/google',passport.authenticate('google',{scope:['profile']}))
+router.get('/google',passport.authenticate('google',{scope:['profile','email']}))
 
 /**
  * @swagger
@@ -28,7 +28,10 @@ router.get('/google',passport.authenticate('google',{scope:['profile']}))
  */
 router.get('/google/callback', passport.authenticate('google',{failureRedirect: '/' }),
      (req,res)=>{
+        // console.log(req)
         res.redirect('/dashboard')
+        // TODO:
+        // return req.user
     }
 )
 
@@ -43,6 +46,8 @@ router.get('/google/callback', passport.authenticate('google',{failureRedirect: 
  */
 router.get('/logout',(req,res)=>{
     req.logout()
+    // TODO:
+
     res.redirect('/')
 })
 
@@ -87,6 +92,7 @@ router.post('/signup',ensureGuest,async (req,res)=>{
     }
     else{
       user = await User.create(newUser);
+      
       user.setPassword(req.body.password);
       await user.save()
       res.redirect('/')
@@ -101,7 +107,7 @@ router.post('/signup',ensureGuest,async (req,res)=>{
 // Facebook OAuth
 
 router.get('/facebook',passport.authenticate('facebook',
-// {scope:['profile']}
+{scope:['email']}
 ))
 
 /**
@@ -122,7 +128,7 @@ router.get('/facebook/callback', passport.authenticate('facebook',{failureRedire
 
 
 //Github OAuth
-router.get('/github',passport.authenticate('github'))
+router.get('/github',passport.authenticate('github' ,{scope:['email']}))
 
 /**
  * @swagger

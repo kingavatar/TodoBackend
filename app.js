@@ -8,12 +8,14 @@ const MongoStore = require('connect-mongo')(session)
 const cors = require("cors")
 const path = require("path")
 const swaggerUi = require("swagger-ui-express")
+const escFormat = require("@elastic/ecs-morgan-format")
 
 
 //Local requires
 const {connectDB,connectProductionDB} = require('./config/db')
 // const { swaggerUi,specs } = require('./swagger')
 const swaggerFile = require('./swagger_output.json')
+const ecsFormat = require('@elastic/ecs-morgan-format')
 // const { swaggerUi } = require('./swagger')
 
 
@@ -40,18 +42,21 @@ else{
 //Application
 const app = express()
 
-
 //Logging
 if(MODE === 'development'){
     app.use(morgan('dev'))
 }
+else{
+  app.use(morgan(ecsFormat()))
+}
+
 
 //Static UI 
 
 //CORS Support
 var corsOptions = {
     origin: "http://localhost:3000"
-  };
+};
   
 app.use(cors(corsOptions));
 
@@ -64,11 +69,11 @@ app.use(express.json())
 
 //Middleware function to set the user details inside the req body
 app.use(function (req,res,next){
-    res.locals.user = res.user || null
+    res.locals.user = req.user || null
     next()
 })
 
-//SWagger docs
+//Swagger docs
 // app.use('/api-docs',swaggerUi.serve,swaggerUi.setup(specs))
 app.use('/doc',swaggerUi.serve,swaggerUi.setup(swaggerFile))
 
@@ -94,10 +99,11 @@ app.use('/auth',require('./routes/auth'))
 app.use('/note',require('./routes/note'))
 app.use('/admin',require('./routes/stats'))
 app.use('/page',require('./routes/page'))
+app.use('/frontend',require('./routes/user'))
 
 
 //running the app
 app.listen(
     PORT,
     console.log(`APP Started ${MODE} mode on port ${PORT}`) 
-    )
+  )
