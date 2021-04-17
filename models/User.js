@@ -42,6 +42,11 @@ const UserSchema = new mongoose.Schema({
     email: {
         type: String,
         require: false 
+    },
+    isAdmin:{
+        type: Boolean,
+        require: true,
+        default: false
     }
 
     },
@@ -53,7 +58,6 @@ const UserSchema = new mongoose.Schema({
 //See if thse can be static ???????????
 
 UserSchema.methods.setPassword = function(pass){
-    
     //Check how to use salt and use the below statements
     // this.salt = crypto.randomBytes(16).toString(constants.DEFAULT_ENCODING);
     // this.password = crypto.pbkdf2Sync(password, this.salt,constants.PASSWORD_ITER, 64, 'sha512').toString(constants.DEFAULT_ENCODING);
@@ -61,9 +65,13 @@ UserSchema.methods.setPassword = function(pass){
 
 }
 
-
 UserSchema.methods.verifyPassword = function(pass){
     var given_password = hashPassword(pass);
     return given_password === this.password;
 }
+
+UserSchema.methods.checkAdmin = function(){
+    return this.isAdmin;
+}
+
 module.exports = mongoose.model('User',UserSchema)

@@ -13,10 +13,10 @@ const escFormat = require("@elastic/ecs-morgan-format")
 
 //Local requires
 const {connectDB,connectProductionDB} = require('./config/db')
-// const { swaggerUi,specs } = require('./swagger')
 const swaggerFile = require('./swagger_output.json')
 const ecsFormat = require('@elastic/ecs-morgan-format')
 // const { swaggerUi } = require('./swagger')
+// const { swaggerUi,specs } = require('./swagger')
 
 
 
