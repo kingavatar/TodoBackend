@@ -97,9 +97,7 @@ app.use(passport.session())
 app.use('/',require('./routes/index'))
 app.use('/auth',require('./routes/auth'))
 app.use('/note',require('./routes/note'))
-app.use('/admin',require('./routes/stats'))
 app.use('/page',require('./routes/page'))
-app.use('/frontend',require('./routes/user'))
 
 
 //running the app

@@ -6,26 +6,8 @@ const User = require('../models/User')
 const router = express.Router()
 
 // Google OAuth
-/**
- * @swagger
- * /auth/google:
- *   post:
- *     description: Google sigin
- *     responses:
- *       200:
- *         description: Please don't use this
- */
 router.get('/google',passport.authenticate('google',{scope:['profile','email']}))
 
-/**
- * @swagger
- * /auth/google/callback:
- *   get:
- *     description: Google callback
- *     responses:
- *       200:
- *         description: please don't click these
- */
 router.get('/google/callback', passport.authenticate('google',{failureRedirect: '/' }),
      (req,res)=>{
         // console.log(req)
@@ -35,15 +17,6 @@ router.get('/google/callback', passport.authenticate('google',{failureRedirect: 
     }
 )
 
-/**
- * @swagger
- * /logout:
- *   get:
- *     description: Logout
- *     responses:
- *       200:
- *         description: Lougs out the user
- */
 router.get('/logout',(req,res)=>{
     req.logout()
     // TODO:
@@ -53,15 +26,6 @@ router.get('/logout',(req,res)=>{
 
 
 // Normal Loging / SignUP
-/**
- * @swagger
- * /auth/signin:
- *   post:
- *     description: Signin
- *     responses:
- *       200:
- *         description: email and password required for response.
- */
 router.post('/signin', ensureGuest,
   passport.authenticate('local', { failureRedirect: '/' }),
   function(req, res) {
@@ -71,15 +35,6 @@ router.post('/signin', ensureGuest,
 
 
 //SignUp
-/**
- * @swagger
- * /auth/signup:
- *   post:
- *     description: Signup
- *     responses:
- *       200:
- *         description: Signup.
- */
 router.post('/signup',ensureGuest,async (req,res)=>{
     const newUser = {
       firstName: req.body.firstName,
@@ -106,19 +61,8 @@ router.post('/signup',ensureGuest,async (req,res)=>{
 
 // Facebook OAuth
 
-router.get('/facebook',passport.authenticate('facebook',
-{scope:['email']}
-))
+router.get('/facebook',passport.authenticate('facebook',{scope:['email']}))
 
-/**
- * @swagger
- * /auth/facebook/callback:
- *   get:
- *     description: FB callback
- *     responses:
- *       200:
- *         description: please don't click these
- */
 router.get('/facebook/callback', passport.authenticate('facebook',{failureRedirect: '/' }),
      (req,res)=>{
         res.redirect('/dashboard')
@@ -130,20 +74,10 @@ router.get('/facebook/callback', passport.authenticate('facebook',{failureRedire
 //Github OAuth
 router.get('/github',passport.authenticate('github' ,{scope:['email']}))
 
-/**
- * @swagger
- * /auth/facebook/callback:
- *   get:
- *     tags: User
- *     description: FB callback
- *     responses:
- *       200:
- *         description: please don't click these
- */
 router.get('/github/callback', passport.authenticate('github',{failureRedirect: '/' }),
      (req,res)=>{
         res.redirect('/dashboard')
     }
-)
+  )
 
 module.exports = router

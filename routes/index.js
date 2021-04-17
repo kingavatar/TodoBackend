@@ -1,26 +1,20 @@
 const express = require('express')
 const router = express.Router()
-
 const {ensureAuth, ensureGuest} = require('../middleware/auth')
-const User = require('../models/User')
-
-router.get('/',ensureGuest,(req,res)=>{
-    res.sendFile("land.html",{root: './views'})
-})
+const {getLandingPage, getDashboard, getStats, getUserStatus} = require('../controllers/index')
 
 
 
-router.get('/dashboard',ensureAuth, async (req,res)=>{
-    try {
-        
-        const myuser = await User.findOne({_id : req.user.id}).lean()
-        var html = "<h1> Hi "+myuser.firstName+"</h1><a href='/auth/logout'>logout</a><a href='views/'>"   
-        res.send(html)
-    } catch (err) {
-        console.log(err)
-    }
 
-})
+router.get('/',ensureGuest,getLandingPage)
+
+router.get('/dashboard',ensureAuth,getDashboard)
+
+// TODO: ensureAdmin
+router.get('/getstats',ensureAuth, getStats)
+
+router.get('/authstatus',ensureAuth,getUserStatus)
+
 
 
 module.exports = router
