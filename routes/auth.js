@@ -1,5 +1,6 @@
 const express = require('express')
 const passport = require('passport')
+const { getUserStatus } = require('../controllers')
 const { hashPassword } = require('../helpers/extension')
 const { ensureGuest } = require('../middleware/auth')
 const User = require('../models/User')
@@ -54,6 +55,7 @@ router.post('/signup',ensureGuest,async (req,res)=>{
     }
 })
 
+router.get('/')
 
 
 
@@ -79,5 +81,8 @@ router.get('/github/callback', passport.authenticate('github',{failureRedirect: 
         res.redirect('/dashboard')
     }
   )
+
+router.get('/authstatus',ensureAuth,getUserStatus)
+
 
 module.exports = router

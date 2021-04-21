@@ -12,8 +12,13 @@ router.get('/dashboard',ensureAuth,getDashboard)
 
 router.get('/getstats',ensureAdmin, getStats)
 
-router.get('/authstatus',ensureAuth,getUserStatus)
+
+router.post('/test',ensureGuest,(req,res)=>{
+	console.log("---");
+	console.log(req.body);
+})
 
 
 
+  
 module.exports = router

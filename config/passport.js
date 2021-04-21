@@ -2,7 +2,9 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy
 const LocalStrategy = require('passport-local').Strategy
 const FacebookStrategy = require('passport-facebook').Strategy
 const GithubStrategy = require('passport-github2').Strategy
+const JWTStrategy = require('passport-jwt').Strategy
 const mongoose = require('mongoose')
+const {jwtFromRequest, verifyUser} = require("../helpers/jwt")
 const User = require('../models/User')
 
 
@@ -121,7 +123,17 @@ module.exports = function (passport) {
       }
     }
   ));
-
+  
+  //JWT Strategy
+  passport.use(new JWTStrategy({jwtFromRequest:jwtFromRequest,secretOrKey: process.env.JWT_SECRET},function(payload,done){
+    if(verifyUser(payload.data)){
+      return done(null,payload.data)
+    }
+    else{
+      return done(null,false)
+    }
+  }))
+  
 
 
 

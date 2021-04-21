@@ -20,6 +20,7 @@ async function getDashboard(req,res){
 
 async function getUserStatus(req,res){
     try {
+        console.log(req.isAuthenticated());
         return req.isAuthenticated()
         // return req.user
     } catch (err) {
