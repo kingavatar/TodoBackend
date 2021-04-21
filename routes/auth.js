@@ -2,7 +2,7 @@ const express = require('express')
 const passport = require('passport')
 const { getUserStatus } = require('../controllers')
 const { hashPassword } = require('../helpers/extension')
-const { ensureGuest } = require('../middleware/auth')
+const { ensureGuest, ensureAuth } = require('../middleware/auth')
 const User = require('../models/User')
 const router = express.Router()
 
