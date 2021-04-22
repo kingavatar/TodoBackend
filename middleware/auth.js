@@ -1,5 +1,5 @@
 const constants = require("../config/constants");
-
+const JWT = require('jsonwebtoken')
 module.exports = {
     ensureAuth: function (req, res, next) {
       if (req.isAuthenticated()) {
@@ -29,5 +29,23 @@ module.exports = {
       else{
         res.redirect('/')
       }
+    },
+    verifyToken: function(req,res,next){
+      if(!req.headers['authorization']){
+        // FIXME: Return error or status
+        return res.send(404)
+      }
+      const header = req.headers['authorization'];
+      const token = header.split(' ')[1]  // Token is in the form of Bearer <token>
+      JWT.verify(token,process.env.JWT_SECRET,(err,payload)=>{
+        if(err){
+          // FIXME: return erro
+          return res.send(404)
+        }
+        req.payload = payload
+        next()
+      })
+
+
     }
   }

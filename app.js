@@ -101,10 +101,10 @@ app.use(passport.session())
 
 
 //Routes
-app.use('/',require('./routes/index'))
-app.use('/auth',require('./routes/auth'))
-app.use('/note',require('./routes/note'))
-app.use('/page',require('./routes/page'))
+app.use('/api',require('./routes/index'))
+app.use('/api/auth',require('./routes/auth'))
+app.use('/api/note',require('./routes/note'))
+app.use('/api/page',require('./routes/page'))
 
 
 //running the app
