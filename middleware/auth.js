@@ -12,7 +12,7 @@ module.exports = {
       if (!req.isAuthenticated()) {
         return next();
       } else {
-        res.redirect('/dashboard');
+        res.redirect('/api/dashboard');
       }
     },
     ensureAdmin: function(req,res,next){
@@ -31,18 +31,20 @@ module.exports = {
       }
     },
     verifyToken: function(req,res,next){
+      // console.log(req)
+      console.log(req)
       if(!req.headers['authorization']){
         // FIXME: Return error or status
-        return res.send(404)
+        return res.sendStatus(404)
       }
       const header = req.headers['authorization'];
       const token = header.split(' ')[1]  // Token is in the form of Bearer <token>
       JWT.verify(token,process.env.JWT_SECRET,(err,payload)=>{
         if(err){
           // FIXME: return erro
-          return res.send(404)
+          return res.sendStatus(404)
         }
-        req.payload = payload
+        req.payload = payload.user
         next()
       })
 

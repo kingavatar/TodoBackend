@@ -18,26 +18,7 @@ router.put('/:id',ensureAuth, editNote)
 //Delete a note
 router.delete('/:id',ensureAuth, deleteNote)
 
-//API to get all notes specific to web page
-router.get('/websites/:wsite',ensureAuth,async (req,res)=>{
-    try {
-        //Look into here
-        let link = myTrim(req.params.wsite)
-        let notes = Note.find({myLink:{$regex: link},timer:{$gte:new Date(Date.now())}})
-        if(!notes || notes.length==0){
-            //No website specific notes
-            //TODO:
-        }
-        else{
-            //Have to return the list of all notes
-            //TODO:
-        }
-    } catch (error) {
-        //ERROR
-        //TODO:
-        console.log(error)
-    }
-})
+
 
 
 module.exports = router

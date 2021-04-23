@@ -9,20 +9,18 @@ async function getLandingPage(req,res){
 
 async function getDashboard(req,res){
     try {
-        
-        const myuser = await User.findOne({_id : req.user.id}).lean()
-        var html = "<h1> Hi "+myuser.firstName+"</h1><a href='/auth/logout'>logout</a><a href='views/'>"   
-        res.send(html)
+        console.log(req)
+        const myuser = await User.findOne({_id : req.payload._id}).lean()
+        res.status(200).send("ok "+myuser.firstName)
     } catch (err) {
         console.log(err)
+        res.status(500)
     }
 }
 
 async function getUserStatus(req,res){
     try {
-        console.log(req.isAuthenticated());
         return req.isAuthenticated()
-        // return req.user
     } catch (err) {
         console.log(err)
     }

@@ -2,9 +2,14 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy
 const LocalStrategy = require('passport-local').Strategy
 const FacebookStrategy = require('passport-facebook').Strategy
 const GithubStrategy = require('passport-github2').Strategy
+const {Strategy, ExtractJwt} = require('passport-jwt')
 const mongoose = require('mongoose')
 const User = require('../models/User')
 
+const opts = {
+  jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+  secretOrKey: process.env.JWT_SECRET
+}
 
 module.exports = function (passport) {
   passport.use(
@@ -12,7 +17,7 @@ module.exports = function (passport) {
       {
         clientID: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackURL: '/auth/google/callback',
+        callbackURL: '/api/auth/google/callback',
       },
       async (accessToken, refreshToken, email,profile, done) => {
         const newUser = {
@@ -66,7 +71,7 @@ module.exports = function (passport) {
     {
     clientID: process.env.FACEBOOK_APP_ID,
     clientSecret: process.env.FACEBOOK_APP_SECRET,
-    callbackURL: "/auth/facebook/callback",
+    callbackURL: "/api/auth/facebook/callback",
     profileFields: ['id','emails','name']
     },
     async (accessToken, refreshToken, profile, done) => {
@@ -96,8 +101,7 @@ module.exports = function (passport) {
     {
     clientID: process.env.GITHUB_CLIENT_ID,
     clientSecret: process.env.GITHUB_CLIENT_SECRET,
-    callbackURL: "/auth/github/callback"
-    // scope:['user:email']
+    callbackURL: "/api/auth/github/callback"
     },
     async (accessToken, refreshToken, profile, done) => {
       console.log(profile)
@@ -122,10 +126,6 @@ module.exports = function (passport) {
       }
     }
   ));
-  
-
-  
-
 
 
   passport.serializeUser((user, done) => {

@@ -9,7 +9,7 @@ const cors = require("cors")
 const path = require("path")
 const swaggerUi = require("swagger-ui-express")
 const escFormat = require("@elastic/ecs-morgan-format")
-
+const cookieParser = require("cookie-parser")
 
 //Local requires
 const {connectDB,connectProductionDB} = require('./config/db')
@@ -50,6 +50,12 @@ else{
   app.use(morgan(ecsFormat()))
 }
 
+//Parsing and rest api handling
+app.use(express.urlencoded({ extended: false }))
+app.use(express.json())
+app.use(cookieParser())
+
+
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000/*");
   res.header(
@@ -62,7 +68,8 @@ app.use((req, res, next) => {
 
 //CORS Support
 var corsOptions = {
-    origin: "http://localhost:3000"
+    origin: "http://localhost:3000",
+    // credentials : true
 };
   
 app.use(cors(corsOptions));
@@ -70,9 +77,6 @@ app.use(cors(corsOptions));
 
 
 
-//Parsing and rest api handling
-app.use(express.urlencoded({ extended: false }))
-app.use(express.json())
 
 //Middleware function to set the user details inside the req body
 app.use(function (req,res,next){
@@ -97,10 +101,9 @@ app.use(
 
 //Passport initiliazation
 app.use(passport.initialize())
-app.use(passport.session())
+// app.use(passport.session())
 
 
-//Routes
 app.use('/api',require('./routes/index'))
 app.use('/api/auth',require('./routes/auth'))
 app.use('/api/note',require('./routes/note'))

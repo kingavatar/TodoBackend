@@ -3,21 +3,21 @@ const Page = require('../models/Page')
 async function getPages(req,res){
     var user = req.user;
     const pages = await Page.find({_id: {"$in":user.pages }}).lean()
-    return pages
+    res.json({pages: pages})
+    res.status(200)
 }
 
 async function getPageById(req,res){
     try{
         const page = await Page.findOne({_id:req.params.id}).lean()
     }catch(error){
-        //RETURN RESOURCE NOT FOUND
-
+        res.status(404)
     }
     if(req.user.id===page.ownerId || page.status==="public"){
-        return page;
+        res.json({page: page})
     }
     else{
-        res.redirect('/dashboard')
+        res.status(401).json({})
     }
 }
 
@@ -27,15 +27,13 @@ async function addPage(req,res){
         if(req.body.hasOwnProperty(pageName)){
             name = req.body.name
         }
-        
         let page = await Page.create({
                                     'ownerId':req.user.id,
                                     'pageName':name
                                 })
-        return page._id
-
+        res.status(200).send("Update Successful")
     } catch (error) {
-        // TODO:
+        res.status(500)
     }
 }
 
@@ -46,8 +44,9 @@ async function updatePage(req,res){
             new: true,
             runValidators: true
         })
+        res.status(200)
     }catch(error){
-        // TODO:
+        res.status(500)
     }
 }
 
