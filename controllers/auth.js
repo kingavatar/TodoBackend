@@ -4,8 +4,9 @@ const { generateToken } = require("../helpers/jwt");
 
 async function loginCallback(req,res){
     const token = await generateToken(req,res,req.user)
-    res.status(200).send({'token':token})
+    res.status(200).send({'token':token,'user_id':req.user._id})
 }
+
 
 async function localSignup(req,res){
     const newUser = {
@@ -15,7 +16,6 @@ async function localSignup(req,res){
       let user = await User.findOne({email:req.body.email})
       if(user){
         // NOT POSSIBLE USER EXISTS
-        res.redirect('/api/dashboard')
         res.status(409)
       }
       else{
@@ -24,9 +24,11 @@ async function localSignup(req,res){
         await user.save()
   
         const token = await generateToken(user)
-        res.status(201).send({'token':token})
+        res.status(201).send({'token':token,'user_id':user._id})
       }
 }
+
+
 
 
 async function logout(req,res){

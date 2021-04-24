@@ -17,11 +17,6 @@ const NoteSchema = new mongoose.Schema({
         ref: 'User',
         required: true
     },
-    // myLink:{
-    //     type:String,
-    //     required: false,
-    //     default: 'null'
-    // },
     timer:{
         type: Date, 
         required: true,

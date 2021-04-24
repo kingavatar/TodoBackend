@@ -5,49 +5,43 @@ module.exports = {
       if (req.isAuthenticated()) {
         return next()
       } else {
-        res.redirect('/')
+        res.status(208)
       }
     },
     ensureGuest: function (req, res, next) {
       if (!req.isAuthenticated()) {
         return next();
       } else {
-        res.redirect('/api/dashboard');
+        res.status(401);
       }
     },
     ensureAdmin: function(req,res,next){
       if(req.isAuthenticated()){
         // FIXME: change this to isadmin function 
-        if(req.user.firstName === "admin" && req.user.email === constants.ADMIN_EMAIL){
-        
+        const email = req.payload.email;
+        if(email == constants.ADMIN_EMAIL){
             return next();
         }
         else{
-          res.redirect('/dashboard')
+          res.status(401).send()
         }
       }
       else{
-        res.redirect('/')
+        res.status(401).send()
       }
     },
     verifyToken: function(req,res,next){
-      // console.log(req)
-      console.log(req)
-      if(!req.headers['authorization']){
-        // FIXME: Return error or status
-        return res.sendStatus(404)
+      if(!req.headers['token']){
+        res.status(407).send()
       }
-      const header = req.headers['authorization'];
+      const header = req.headers['token'];
       const token = header.split(' ')[1]  // Token is in the form of Bearer <token>
       JWT.verify(token,process.env.JWT_SECRET,(err,payload)=>{
         if(err){
-          // FIXME: return erro
-          return res.sendStatus(404)
+          res.status(404).send()
         }
         req.payload = payload.user
         next()
       })
-
-
     }
   }

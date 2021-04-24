@@ -1,16 +1,19 @@
 const express = require('express')
-const { getPages, getPageById, addPage, updatePage } = require('../controllers/page')
 const router = express.Router()
-const {ensureAuth} = require('../middleware/auth')
+
+// Controllers
+const { getPages, getPageById, addPage, updatePage, deletePage } = require('../controllers/page')
+// Middleware
+const {verifyToken} = require('../middleware/auth')
 
 
-router.get('/', ensureAuth, getPages)
+router.get('/', verifyToken, getPages)
 
-router.get('/:id', ensureAuth, getPageById)
-
-router.post('/add',ensureAuth, addPage)
-
-router.put('/:id',ensureAuth, updatePage)
+// ========================== Pages CRUD =============================================
+router.get('/:id', verifyToken, getPageById)
+router.post('/add',verifyToken, addPage)
+router.put('/:id',verifyToken, updatePage)
+router.delete('/:id',verifyToken,deletePage)
 
 
 module.exports = router

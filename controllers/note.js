@@ -2,6 +2,7 @@ const JSON = require('JSON')
 const {myRegex} = require('../helpers/extension') 
 const Note = require('../models/Note')
 const Page = require('../models/Page')
+const User = require('../models/User')
 
 
 async function getNotes(req,res){
@@ -13,20 +14,32 @@ async function postNote(req,res){
     // FIXME: HOW TO GET PAGE ID 
     // FIXME: See if new page to be created when page null or add to default page
     try {
-        // TODO: create new page if pageId === empty
         let pageId = null // DANGER PLEASE CHANGE THIS
         let myLink = '' //
-        
-        if(!pageId || pageId==undefined){
-            let page = await Page.create({'ownerId':user.id})
-            pageId = page._id
+        let page = null
+        console.log("----")
+        if(!pageId || pageId==undefined){   
+            const myPage = { "ownerId" : req.payload._id}
+            try{
+                page = await Page.create(myPage)
+                let user = await User.findById(req.payload._id)
+                user.pages.push(page._id)
+                await user.save()
+
+            }catch(err){
+                console.log(error)
+                res.status(500)
+            }
         }
         
-        req.body.ownerId = req.user.id
-        req.body.pageId = pageId
+        req.body.ownerId = req.payload._id
+        req.body.pageId = page._id
 
         let note = await Note.create(req.body)
-        
+        let ID = note._id;
+        page.notesIn.push(ID)
+        await page.save()
+        res.status(200).send(ID)
         return note._id
    
     } catch (error) {
@@ -39,20 +52,17 @@ async function getNoteById(req,res){
     // TODO: Have to add features regarding public , private and selected view.
     try {
         let note = await Note.findById(req.params.id).lean()
-
         // if there is no such note
         if(!note){
             console.log('not found 404')
-            res.status(404)
+            res.status(404).send()
         }
         else{
-            console.log(note.ownerId == req.user.id);
-            console.log(req.user.id);
-            if(note.ownerId != req.user.id && !note.viewers.includes(req.user.id)){
+            if(note.ownerId != req.payload._id && !note.viewers.includes(req.payload._id)){
                 console.log('permission denied')
                 res.status(401).send("Permission denied")
             }
-            else if(note.ownerId == req.user.id){
+            else if(note.ownerId == req.payload._id){
                 res.status(200).send(note)
             }
             else{
@@ -68,11 +78,12 @@ async function getNoteById(req,res){
 
 async function editNote(req,res){
     try {
+        console.log(req.params.id)
         let note = await Note.findOne({_id: req.params.id}).lean()
-        if(!story){
+        if(!note){
             res.status(404)
         }
-        if(story.ownerId != req.user.id){
+        if(note.ownerId != req.payload._id){
             res.status(401)
         }
         else{
@@ -89,7 +100,7 @@ async function editNote(req,res){
     }
 }
 
-
+// TODO: See if this query can be optimized
 async function deleteNote(req,res){
     try {
         let note = await Note.findById({_id:req.params.id}).lean()
@@ -97,12 +108,15 @@ async function deleteNote(req,res){
             res.status(404)
         }
         else{
-            if(note.ownerId != req.user.id){
+            if(note.ownerId != req.payload._id){
                 console.log('No you cannnot delete')
                 res.status(401)
             }
             else{
+                let page = await Page.findById(note.pageId)
                 await Note.remove({_id: req.params.id})
+                page.notesIn.remove(req.params.id)
+                await page.save()
                 res.status(202).send("deleted")
             }
         }

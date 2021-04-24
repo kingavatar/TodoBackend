@@ -1,22 +1,18 @@
 const express = require('express')
 const router = express.Router()
-const {ensureAuth} = require('../middleware/auth')
+// Controllers
 const { getNotes, postNote, getNoteById, editNote, deleteNote} = require('../controllers/note')
+//Middleware
+const {verifyToken} = require('../middleware/auth')
 
 //Redirect to create a note page
-router.get('/add',ensureAuth,getNotes)
+router.get('/',verifyToken,getNotes)
 
-//Ceate a note
-router.post('/add',ensureAuth,postNote)
-
-//Get a note
-router.get('/:id',ensureAuth,getNoteById)
-
-//Actually editing the note
-router.put('/:id',ensureAuth, editNote)
-
-//Delete a note
-router.delete('/:id',ensureAuth, deleteNote)
+// ============================= Note operations CRUD ==========================================
+router.post('/add',verifyToken,postNote)
+router.get('/:id',verifyToken,getNoteById)
+router.put('/:id',verifyToken, editNote)
+router.delete('/:id',verifyToken, deleteNote)
 
 
 
