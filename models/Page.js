@@ -1,28 +1,28 @@
 const mongoose = require('mongoose');
 
-const PageSchema = new mongoose.Schema({
-        pageName:{
-            type: String,
-            require: true,
-            default: 'Untitled'
-        },
-        pageLink:{
-            type: String,
-            reqiure: false,
-        },
-        ownerId:{
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'User',
-            required: true
-        },
-        notesIn:{
-            type: [mongoose.Schema.Types.ObjectId],
-            ref: 'Note',
-            required: false
-        }        
-
+const PageSchema = new mongoose.Schema(
+  {
+    title: {
+      type: String,
+      require: true,
+      default: "Untitled",
     },
-    { timestamps: true }    
+    pageLink: {
+      type: String,
+      reqiure: false,
+    },
+    ownerId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    notesIn: {
+      type: [mongoose.Schema.Types.ObjectId],
+      ref: "Note",
+      required: false,
+    },
+  },
+  { timestamps: true }
 );
 
 

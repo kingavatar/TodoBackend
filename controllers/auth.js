@@ -4,7 +4,7 @@ const { generateToken } = require("../helpers/jwt");
 
 async function loginCallback(req,res){
     const token = await generateToken(req,res,req.user)
-    res.status(200).send({'token':token,'user_id':req.user._id})
+    res.status(200).send({ token: token, user: req.user });
 }
 
 
@@ -24,7 +24,7 @@ async function localSignup(req,res){
         await user.save()
   
         const token = await generateToken(user)
-        res.status(201).send({'token':token,'user_id':user._id})
+        res.status(201).send({ token: token, user: req.user });
       }
 }
 
@@ -33,7 +33,7 @@ async function localSignup(req,res){
 
 async function logout(req,res){
     req.logout()
-    res.satus(200).send({message:"loggedout"})
+    res.status(200).send({ message: "logged out" });
 }
 
 

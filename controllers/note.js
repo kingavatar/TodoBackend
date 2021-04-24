@@ -6,8 +6,10 @@ const User = require('../models/User')
 
 
 async function getNotes(req,res){
-    //RENDER THE ADDING PAGE
-    res.sendFile('add.html',{root: './views'})
+  //RENDER THE ADDING PAGE
+  // res.sendFile('add.html',{root: './views'})
+  var page = await Page.findById(req.params.id).populate("notesIn").lean();
+  res.send(page.notesIn);
 }
 
 async function postNote(req,res){

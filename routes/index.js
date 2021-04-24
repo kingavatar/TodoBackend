@@ -7,7 +7,7 @@ const { ensureGuest, ensureAdmin, verifyToken} = require('../middleware/auth')
 
 
 
-router.get('/dashboard',verifyToken,getDashboard)
+router.get("/dashboard", verifyToken, getLandingPage);
 router.get('/',ensureGuest,getLandingPage)
 router.get('/getstats',verifyToken,ensureAdmin, getStats)
 

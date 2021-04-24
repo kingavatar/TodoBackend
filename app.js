@@ -29,7 +29,7 @@ require('./config/passport')(passport)
 //Confugration Varaibles
 const PORT = process.env.PORT
 const MODE = process.env.NENV
-
+const publicRoot = "./dist";
 
 //Connect to database
 if(MODE === 'development'){
@@ -54,22 +54,23 @@ else{
 app.use(express.urlencoded({ extended: false }))
 app.use(express.json())
 app.use(cookieParser())
+app.use(express.static(publicRoot));
 
 
 app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000/*");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
+  // res.setHeader("Access-Control-Allow-Origin", "http://localhost:8080/*");
+  // res.header(
+  //   "Access-Control-Allow-Headers",
+  //   "Origin, X-Requested-With, Content-Type, Accept"
+  // );
   next();
 });
 //Static UI 
 
 //CORS Support
 var corsOptions = {
-    origin: "http://localhost:3000",
-    // credentials : true
+  origin: "http://localhost:3000",
+  // credentials: true,
 };
   
 app.use(cors(corsOptions));
@@ -108,7 +109,9 @@ app.use('/api',require('./routes/index'))
 app.use('/api/auth',require('./routes/auth'))
 app.use('/api/note',require('./routes/note'))
 app.use('/api/page',require('./routes/page'))
-
+ app.get("*", (req, res) => {
+   res.sendFile(path.resolve(__dirname,"dist", "index.html"));
+ });
 
 //running the app
 app.listen(

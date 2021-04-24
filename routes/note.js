@@ -6,7 +6,7 @@ const { getNotes, postNote, getNoteById, editNote, deleteNote} = require('../con
 const {verifyToken} = require('../middleware/auth')
 
 //Redirect to create a note page
-router.get('/',verifyToken,getNotes)
+router.get("/page/:id", verifyToken, getNotes);
 
 // ============================= Note operations CRUD ==========================================
 router.post('/add',verifyToken,postNote)

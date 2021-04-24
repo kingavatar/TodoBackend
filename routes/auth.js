@@ -21,7 +21,7 @@ router.get('/github/callback', passport.authenticate('github',{failureRedirect: 
 router.post('/signin', passport.authenticate('local', { failureRedirect: '/' }),loginCallback);
 router.post('/signup',ensureGuest,localSignup)
 
-router.get('/logout',verifyToken,logout)
+router.get("/logout", logout);
 
 
 //Don't know why we need

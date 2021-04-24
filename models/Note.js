@@ -1,37 +1,54 @@
-const mongoose = require('mongoose')
-const constants = require('../config/constants')
+const mongoose = require("mongoose");
+const constants = require("../config/constants");
 
-
-const NoteSchema = new mongoose.Schema({
-    title:{
+const NoteSchema = new mongoose.Schema(
+  {
+    title: {
+      type: String,
+      required: false,
+      trim: true,
+    },
+    content: {
+      type: String,
+      required: isStringRequired,
+    },
+    ownerId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+    timer: {
+      type: Date,
+      required: true,
+      default: new Date(+new Date() + constants.ONEDAY),
+    },
+    priority: {
+      type: Number,
+      required: true,
+      min: 0,
+      max: 4,
+      default: 0,
+    },
+    imgList: [
+      {
         type: String,
-        required: true,
-        trim: true
-    },
-    content:{
-        type: String,
-        required: true,
-    },
-    ownerId:{ 
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
-    },
-    timer:{
-        type: Date, 
-        required: true,
-        default:  new Date(+new Date() + constants.ONEDAY)
-    },
-    pageId:{
-        type: mongoose.Schema.Types.ObjectId,
         required: false,
-        ref: 'Page'
-    }
-    
+        default: "",
+      },
+    ],
+    pageId: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: false,
+      ref: "Page",
     },
-    { timestamps: true }
-    
-)
+  },
+  { timestamps: true }
+);
 
 
-module.exports = mongoose.model('Note',NoteSchema)
+function isStringRequired() {
+  return typeof this.content === "string" ? false : true;
+}
+
+
+module.exports = mongoose.model("Note", NoteSchema);
