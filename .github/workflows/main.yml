@@ -8,8 +8,9 @@ jobs:
     steps:
       - name: Frontend UI
         uses: actions/checkout@v2
-        repository: kingavatar/todoOnline
-        path: todoOnline
+        with:
+          repository: kingavatar/todoOnline
+          path: todoOnline
                 
       - name: dockerLogin
         uses: docker/login-action@v1
