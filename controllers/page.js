@@ -61,19 +61,18 @@ async function updatePage(req, res) {
         ); // Pattern to check uuidv4
         if (pattern.test(note._id)) {
           var temp = await Note.create({
-            content: note.content!=undefined? note.content:'',
+            content: note.content,
             priority: note.priority,
             imgList: note.imgList,
-            ownerId: note.ownerId,
+            ownerId: req.payload._id,
             pageId: note.pageId,
           });
           page.notesIn.push(temp._id);
         } else {
-          const noteContent = note;
-          noteContent.content = note.content != undefined ? note.content : '';
+          note.ownerId = req.payload._id;
           var temp = await Note.findOneAndUpdate(
             { _id: note._id },
-            noteContent,
+            note,
             {
               new: true,
               runValidators: true,
