@@ -4,12 +4,9 @@ const Note = require("../models/Note");
 const mongoose = require("mongoose");
 
 async function getPages(req, res) {
-  // if(req.payload===undefined){
-  //   res.status(404).send()
-  // }
   const user = await User.findById(req.payload._id);
   const pages = await Page.find({ _id: { $in: user.pages } }).lean();
-  // console.log(user.pages);
+  
   res.json({ pages: pages });
 }
 
@@ -19,6 +16,7 @@ async function getPageById(req, res) {
   } catch (error) {
     res.status(404).send();
   }
+  console.log(page)
   if (req.payload._id == page.ownerId || page.status == "public") {
     res.json({ page: page });
   } else {
@@ -50,11 +48,9 @@ async function updatePage(req, res) {
   let page = req.body;
   try {
     var notes = page.notesIn;
-    console.log(notes)
     page.notesIn = [];
     for (let note of notes) {
       try {
-        console.log("note ",note);
         pattern = new RegExp(
           "^[0-9A-F]{8}-[0-9A-F]{4}-[4][0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$",
           "i"
@@ -106,8 +102,6 @@ async function updatePage(req, res) {
 async function deletePage(req, res) {
   try {
     var page = await Page.findById(req.params.id).lean();
-    console.log(page);
-    console.log(req.payload._id);
     if (!page) {
       res.status(404).send();
     } else if (page.ownerId != req.payload._id) {
@@ -116,11 +110,11 @@ async function deletePage(req, res) {
       var notes = page.notesIn;
       for (let note of notes) {
         if (note == null) {
-          break;
+          continue;
         }
-        var temp = await Note.deleteOne(note._id);
+        var temp = await Note.findByIdAndDelete(note._id);
       }
-      var g = await Page.findByIdAndDelete(req.params.id);
+      var g = await Page.findByIdAndDelete({'_id': req.params.id});
        let myUser = await User.findById(req.payload._id);
        myUser.pages.splice(myUser.pages.indexOf(req.payload._id), 1);
        await myUser.save();

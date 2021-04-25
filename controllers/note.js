@@ -6,9 +6,8 @@ const User = require('../models/User')
 
 
 async function getNotes(req,res){
-  //RENDER THE ADDING PAGE
-  // res.sendFile('add.html',{root: './views'})
   var page = await Page.findById(req.params.id).populate("notesIn").lean();
+  console.log(page)
   res.send(page.notesIn);
 }
 
@@ -19,7 +18,6 @@ async function postNote(req,res){
         let pageId = null // DANGER PLEASE CHANGE THIS
         let myLink = '' //
         let page = null
-        console.log("----")
         if(!pageId || pageId==undefined){   
             const myPage = { "ownerId" : req.payload._id}
             try{
@@ -56,12 +54,10 @@ async function getNoteById(req,res){
         let note = await Note.findById(req.params.id).lean()
         // if there is no such note
         if(!note){
-            console.log('not found 404')
             res.status(404).send()
         }
         else{
             if(note.ownerId != req.payload._id && !note.viewers.includes(req.payload._id)){
-                console.log('permission denied')
                 res.status(401).send("Permission denied")
             }
             else if(note.ownerId == req.payload._id){
@@ -73,14 +69,12 @@ async function getNoteById(req,res){
             }
         }
     } catch (error) {
-        console.log('resource not there')
         res.status(500).send("Server Error")
     }
 }
 
 async function editNote(req,res){
     try {
-        console.log(req.params.id)
         let note = await Note.findOne({_id: req.params.id}).lean()
         if(!note){
             res.status(404)
@@ -111,13 +105,12 @@ async function deleteNote(req,res){
         }
         else{
             if(note.ownerId != req.payload._id){
-                console.log('No you cannnot delete')
                 res.status(401)
             }
             else{
                 let page = await Page.findById(note.pageId)
-                await Note.remove({_id: req.params.id})
-                page.notesIn.remove(req.params.id)
+                await Note.deleteOne({_id: req.params.id})
+                page.notesIn.splice(page.notesIn.indexOf(req.params.id),1);
                 await page.save()
                 res.status(202).send("deleted")
             }

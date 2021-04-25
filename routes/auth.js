@@ -18,27 +18,27 @@ const { ensureGuest, verifyToken } = require('../middleware/auth')
 router.get('/google',passport.authenticate('google',{scope:['profile','email']}))
 router.get(
   "/google/callback",
-  passport.authenticate("google", { failureRedirect: "/" }),
+  passport.authenticate("google", { failureRedirect: "/login" }),
   socialCallback
 );
 
 router.get('/facebook',passport.authenticate('facebook',{scope:['email']}))
 router.get(
   "/facebook/callback",
-  passport.authenticate("facebook", { failureRedirect: "/" }),
+  passport.authenticate("facebook", { failureRedirect: "/login" }),
   socialCallback
 );
 
 router.get('/github',passport.authenticate('github' ,{scope:['email']}))
 router.get(
   "/github/callback",
-  passport.authenticate("github", { failureRedirect: "/" }),
+  passport.authenticate("github", { failureRedirect: "/login" }),
   socialCallback
 );
 
 router.get("/social",verifyToken, getUserDetails);
 
-router.post('/signin', passport.authenticate('local', { failureRedirect: '/' }),loginCallback);
+router.post('/signin', passport.authenticate('local', { failureRedirect: '/login' }),loginCallback);
 router.post('/signup',ensureGuest,localSignup)
 
 router.get("/logout", logout);

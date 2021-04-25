@@ -36,13 +36,11 @@ module.exports = {
       }
       const header = req.headers["authorization"];
       const token = header; //.split(' ')[1]  // Token is in the form of Bearer <token>
-      // console.log(token);
       JWT.verify(token,process.env.JWT_SECRET,(err,payload)=>{
         if(err){
           res.status(404).send()
         }
         req.payload = payload.user
-        console.log(payload);
         next()
       })
     }

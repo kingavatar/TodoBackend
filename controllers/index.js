@@ -9,9 +9,6 @@ async function getLandingPage(req,res){
 
 async function getDashboard(req,res){
     try {
-        // console.log(req)
-        // const myuser = await User.findOne({_id : req.payload._id}).lean()
-        // res.status(200).send("ok "+myuser.firstName)
         res.sendFile("index.html", { root: "./dist" });
     } catch (err) {
         console.log(err)
