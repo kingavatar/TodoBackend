@@ -1,13 +1,27 @@
+const { response } = require("express");
 const { JsonWebTokenError } = require("jsonwebtoken");
 const { ONEDAY } = require("../config/constants");
 const { generateToken } = require("../helpers/jwt");
 
 async function loginCallback(req,res){
+  console.log(req);
     const token = await generateToken(req,res,req.user)
     res.status(200).send({ token: token, user: req.user });
 }
 
+async function socialCallback(req, res) {
+  const token = await generateToken(req, res, req.user);
+    // res.redirect("/");
+  // res.sendFile("index.html", { root: "./dist" });
+    // res.status(200).send({ token: token, user: req.user });
+  res.redirect("http://localhost:3000/redirect?token=" + token);
 
+}
+
+async function getUserDetails(req,res){
+  console.log(req.body);
+  res.send(req.payload);
+}
 async function localSignup(req,res){
     const newUser = {
         firstName: req.body.firstName,
@@ -37,4 +51,12 @@ async function logout(req,res){
 }
 
 
-module.exports = {loginCallback, localSignup, logout}
+
+
+module.exports = {
+  loginCallback,
+  localSignup,
+  logout,
+  socialCallback,
+  getUserDetails,
+};

@@ -42,6 +42,7 @@ module.exports = {
           res.status(404).send()
         }
         req.payload = payload.user
+        console.log(payload);
         next()
       })
     }

@@ -50,7 +50,7 @@ module.exports = function (passport) {
       passwordField: 'password'
   },
     function(email, password, done) {
-      console.log(email,password)
+      console.log("Logging in ",email)
       User.findOne({ email: email }, function (err, user) {
         if (err) { 
           return done(err); 

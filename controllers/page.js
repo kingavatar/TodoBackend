@@ -4,10 +4,13 @@ const Note = require("../models/Note");
 const mongoose = require("mongoose");
 
 async function getPages(req, res) {
+  // if(req.payload===undefined){
+  //   res.status(404).send()
+  // }
   const user = await User.findById(req.payload._id);
   const pages = await Page.find({ _id: { $in: user.pages } }).lean();
+  // console.log(user.pages);
   res.json({ pages: pages });
-  // res.status(200).send()
 }
 
 async function getPageById(req, res) {
@@ -33,6 +36,9 @@ async function addPage(req, res) {
       ownerId: req.payload._id,
       title: name,
     });
+    let myUser = await User.findById(req.payload._id);
+    myUser.pages.push(page._id);
+    await myUser.save();
     res.send(page);
     // res.status(200).send("Update Successful")
   } catch (error) {
@@ -44,18 +50,18 @@ async function updatePage(req, res) {
   let page = req.body;
   try {
     var notes = page.notesIn;
-    // console.log(notes)
+    console.log(notes)
     page.notesIn = [];
     for (let note of notes) {
       try {
+        console.log("note ",note);
         pattern = new RegExp(
           "^[0-9A-F]{8}-[0-9A-F]{4}-[4][0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$",
           "i"
         ); // Pattern to check uuidv4
         if (pattern.test(note._id)) {
-          console.log(note);
           var temp = await Note.create({
-            content: note.content,
+            content: note.content!=undefined? note.content:'',
             priority: note.priority,
             imgList: note.imgList,
             ownerId: note.ownerId,
@@ -63,11 +69,17 @@ async function updatePage(req, res) {
           });
           page.notesIn.push(temp._id);
         } else {
-          var temp = await Note.findOneAndUpdate({ _id: note._id }, note, {
-            new: true,
-            runValidators: true,
-            upsert: true,
-          });
+          const noteContent = note;
+          noteContent.content = note.content != undefined ? note.content : '';
+          var temp = await Note.findOneAndUpdate(
+            { _id: note._id },
+            noteContent,
+            {
+              new: true,
+              runValidators: true,
+              upsert: true,
+            }
+          );
           page.notesIn.push(note._id);
         }
       } catch (err) {
@@ -110,6 +122,9 @@ async function deletePage(req, res) {
         var temp = await Note.deleteOne(note._id);
       }
       var g = await Page.findByIdAndDelete(req.params.id);
+       let myUser = await User.findById(req.payload._id);
+       myUser.pages.splice(myUser.pages.indexOf(req.payload._id), 1);
+       await myUser.save();
       res.status(201).send();
     }
   } catch (err) {
