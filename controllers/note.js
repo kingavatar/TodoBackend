@@ -6,9 +6,9 @@ const User = require('../models/User')
 
 
 async function getNotes(req,res){
-  var page = await Page.findById(req.params.id).populate("notesIn").lean();
-  console.log(page)
-  res.send(page.notesIn);
+   const page = await Page.findById(req.params.id);
+   const notes = await Note.find({ _id: { $in: page.notesIn } }).lean();
+   res.send(notes);
 }
 
 async function postNote(req,res){

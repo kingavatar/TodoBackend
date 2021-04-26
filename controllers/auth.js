@@ -2,9 +2,8 @@ const { response } = require("express");
 const { JsonWebTokenError } = require("jsonwebtoken");
 const { ONEDAY } = require("../config/constants");
 const { generateToken } = require("../helpers/jwt");
-
+const User = require("../models/User");
 async function loginCallback(req,res){
-    console.log(req.user)
     const token = await generateToken(req,res,req.user)
     res.status(200).send({ token: token, user: req.user });
 }
@@ -33,7 +32,7 @@ async function localSignup(req,res){
         user.setPassword(req.body.password)
         await user.save()
   
-        const token = await generateToken(user)
+        const token = await generateToken(req,res,user)
         res.status(201).send({ token: token, user: req.user });
       }
 }
