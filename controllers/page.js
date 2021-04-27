@@ -5,7 +5,9 @@ const mongoose = require("mongoose");
 const { ObjectId } = require("mongodb");
 async function getPages(req, res) {
   const user = await User.findById(req.payload._id);
-  const pages = await Page.find({ _id: { $in: user.pages } }).lean();
+  const pages = await Page.find({ _id: { $in: user.pages } })
+    .populate("notesIn")
+    .lean();
   
   res.json({ pages: pages });
 }
@@ -16,6 +18,13 @@ async function getPageById(req, res) {
   } catch (error) {
     res.status(404).send();
   }
+  const tempPage = await Page.findById(req.params.id);
+    if(tempPage.notesIn!= page.notesIn)
+  tempPage.notesIn
+    .filter((i) => page.notesIn.indexOf(i) === -1)
+    .forEach(async (i) => {
+      await Note.deleteOne({ _id: i });
+    });
   if (req.payload._id == page.ownerId || page.status == "public") {
     res.json({ page: page });
   } else {
@@ -90,13 +99,7 @@ async function updatePage(req, res) {
         res.status(500).send();
       }
     }
-    const tempPage = await Page.findById(req.params.id);
-    tempPage.notesIn
-      .filter((i) => page.notesIn.indexOf(i) === -1)
-      .forEach(async (i) => {
-        await Note.deleteOne({ _id: i });
-      });
-    if(tempPage.notesIn!= page.notesIn)
+    
     newPage = await Page.findOneAndUpdate({ _id: req.params.id }, page, {
       new: true,
       runValidators: true,
