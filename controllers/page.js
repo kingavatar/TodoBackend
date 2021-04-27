@@ -18,13 +18,13 @@ async function getPageById(req, res) {
   } catch (error) {
     res.status(404).send();
   }
-  const tempPage = await Page.findById(req.params.id);
-    if(tempPage.notesIn!= page.notesIn)
-  tempPage.notesIn
-    .filter((i) => page.notesIn.indexOf(i) === -1)
-    .forEach(async (i) => {
-      await Note.deleteOne({ _id: i });
-    });
+  // const tempPage = await Page.findById(req.params.id);
+    // if(tempPage.notesIn!= page.notesIn)
+  // tempPage.notesIn
+  //   .filter((i) => page.notesIn.indexOf(i) === -1)
+  //   .forEach(async (i) => {
+  //     await Note.deleteOne({ _id: i });
+  //   });
   if (req.payload._id == page.ownerId || page.status == "public") {
     res.json({ page: page });
   } else {
