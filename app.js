@@ -109,7 +109,8 @@ app.use('/api',require('./routes/index'))
 app.use('/api/auth',require('./routes/auth'))
 app.use('/api/note',require('./routes/note'))
 app.use('/api/page',require('./routes/page'))
- app.get("*", (req, res) => {
+app.use('/ext/api/',require('./routes/extension'))
+app.get("/*", (req, res) => {
    res.sendFile(path.resolve(__dirname,"dist", "index.html"));
  });
 

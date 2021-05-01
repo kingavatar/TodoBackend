@@ -9,5 +9,13 @@ module.exports = {
     hashPassword: function(password){
         let hashed = crypto.pbkdf2Sync(password, 'salt',constants.PASSWORD_ITER, constants.REQ_BYTE_LEN, 'sha512').toString(constants.DEFAULT_ENCODING);
         return hashed;
+    },
+    getDomain: function(website){
+        let tempdomain = website.split('/')[2];
+        let domain = tempdomain.split('.')
+        if(domain.length == 2){
+            return domain[0]
+        }
+        return domain[1]
     }
 }

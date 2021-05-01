@@ -35,11 +35,18 @@ module.exports = {
         res.status(407).send();
       }
       const header = req.headers["authorization"];
-      const token = header; //.split(' ')[1]  // Token is in the form of Bearer <token>
+      const token = header; 
+      if(!token || token == undefined){
+		res.status(407).send()
+      }
       JWT.verify(token,process.env.JWT_SECRET,(err,payload)=>{
         if(err){
-          res.status(404).send()
+          return res.status(404).send()
         }
+	else if(payload == undefined){
+	  return res.status(407).send()	
+	}
+	console.log(payload == undefined)	
         req.payload = payload.user
         next()
       })

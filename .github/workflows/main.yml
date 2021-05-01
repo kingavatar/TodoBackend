@@ -1,7 +1,7 @@
 name: toDoBackend Docker
 on:
   push:
-    branches: [ master ]
+    branches: [ frontend ]
 jobs:
   build:
     runs-on: ubuntu-latest
