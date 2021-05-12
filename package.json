@@ -6,7 +6,7 @@
   "scripts": {
     "start": "cross-env NENV=production node app",
     "dev": "cross-env NENV=development nodemon app",
-    "swaggerUi": "node swagger.js"
+    "test": "echo \"testing\" "
   },
   "repository": {
     "type": "git",

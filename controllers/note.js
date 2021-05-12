@@ -6,9 +6,13 @@ const User = require('../models/User')
 
 
 async function getNotes(req,res){
-   const page = await Page.findById(req.params.id);
-   const notes = await Note.find({ _id: { $in: page.notesIn } }).lean();
-   res.send(notes);
+    try{
+        const page = await Page.findById(req.params.id);
+        const notes = await Note.find({ _id: { $in: page.notesIn } }).lean();
+        res.send(notes);
+    }catch(err){
+        res.status(500)
+    }
 }
 
 async function postNote(req,res){

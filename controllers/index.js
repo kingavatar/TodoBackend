@@ -27,6 +27,7 @@ async function getStats(req,res){
     if(req.user.firstName != "admin" || req.user.email!=constants.ADMIN_EMAIL){
         //RETURN ERROR IN PAGE AS ONLY ADMIN HAS PERMISSION
         // res.render('')
+        res.status(500)
     }
     else{
         var users = await User.estimatedDocumentCount();
