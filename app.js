@@ -109,12 +109,12 @@ app.use('/api',require('./routes/index'))
 app.use('/api/auth',require('./routes/auth'))
 app.use('/api/note',require('./routes/note'))
 app.use('/api/page',require('./routes/page'))
- app.get("*", (req, res) => {
+app.get("*", (req, res) => {
    res.sendFile(path.resolve(__dirname,"dist", "index.html"));
  });
 
 //running the app
-app.listen(
+module.exports=app.listen(
     PORT,
-    console.log(`APP Started ${MODE} mode on port ${PORT}`) 
+    console.log(`APP Started ${MODE} mode on port ${PORT}`)
   )
