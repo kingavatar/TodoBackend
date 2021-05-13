@@ -12,7 +12,6 @@ const escFormat = require("@elastic/ecs-morgan-format")
 const cookieParser = require("cookie-parser")
 
 //Local requires
-const {connectDB,connectProductionDB} = require('./config/db')
 const swaggerFile = require('./swagger_output.json')
 const ecsFormat = require('@elastic/ecs-morgan-format')
 // const { swaggerUi } = require('./swagger')
@@ -31,13 +30,7 @@ const PORT = process.env.PORT
 const MODE = process.env.NENV
 const publicRoot = "./dist";
 
-//Connect to database
-if(MODE === 'development'){
-  connectDB()
-}
-else{
-  connectProductionDB()
-}
+
 
 //Application
 const app = express()
@@ -112,10 +105,8 @@ app.use('/api/page',require('./routes/page'))
 app.use('/ext/api/',require('./routes/extension'))
 app.get("/*", (req, res) => {
    res.sendFile(path.resolve(__dirname,"dist", "index.html"));
- });
+ })
 
-//running the app
-app.listen(
-    PORT,
-    console.log(`APP Started ${MODE} mode on port ${PORT}`) 
-  )
+
+
+module.exports = app;

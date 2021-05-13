@@ -10,6 +10,13 @@ module.exports = {
         let hashed = crypto.pbkdf2Sync(password, 'salt',constants.PASSWORD_ITER, constants.REQ_BYTE_LEN, 'sha512').toString(constants.DEFAULT_ENCODING);
         return hashed;
     },
+    checkTime(note){
+        let now = new Date(+new Date() + constants.RELAXATION);
+        if(now>=note.timer){
+            return true;
+        }
+        return false;
+    },
     getDomain: function(website){
         let tempdomain = website.split('/')[2];
         let domain = tempdomain.split('.')

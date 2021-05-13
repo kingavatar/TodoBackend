@@ -1,4 +1,4 @@
-const {getDomain} = require("../helpers/extension")
+const {getDomain, checkTime} = require("../helpers/extension")
 const User = require("../models/User")
 const Note = require("../models/Note")
 const Page = require("../models/Page")
@@ -42,7 +42,21 @@ async function postNote(req,res){
 
 async function getData(req,res){
     console.log(req.body)
-    res.json({'tasks':'2'})
-    res.status(200).send()
+    let name = getDomain(req.body.website)
+    try{
+        let temp = Page.find({'title':name}).populate("notesIn").lean();
+        let f = 0;
+        for(let note of notes){
+            // if  end time of the note is after current time 
+            if(checkTime(note)){
+                f +=1;
+            }
+        }
+        res.json({'tasks':f})
+        res.status(200).send()
+    
+    }catch(err){
+        res.status(500)
+    }
 }
 module.exports = {postNote,getData}
