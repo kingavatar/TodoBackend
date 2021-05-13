@@ -10,18 +10,6 @@ jobs:
         node-version: [12.x]
 
     steps:
-<<<<<<< HEAD
-      - name: Frontend UI
-        uses: actions/checkout@v2
-        with:
-          repository: kingavatar/todoOnline
-          path: todoOnline
-      run: |
-        npm install
-        npm run build  
-        ls
-        pwd    
-=======
       - uses: actions/checkout@v2
       - name: Build and Test
         uses: actions/setup-node@v1
@@ -29,7 +17,6 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - run: npm install
       - run: npm run test
->>>>>>> 8da4a89b29ee618e0704aace3998a5a0651ad3e3
       - name: dockerLogin
         uses: docker/login-action@v1
         with:
@@ -40,4 +27,13 @@ jobs:
         with:
           push: true
           tags: todov100/todobackend:latest
+      - run: docker build --tag todo-app:latest .
+      - name: Push to ECR
+        id: ecr
+        uses: jwalton/gh-ecr-push@v1
+        with:
+          access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          region: ap-south-1
+          image: todo-app:latest     
 
