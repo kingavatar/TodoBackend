@@ -35,5 +35,11 @@ jobs:
           access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           region: ap-south-1
-          image: todo-app:latest     
+          image: todo-app:latest
+      - name: Moving build to artifacts directory
+        run: |
+             ls -al
+             ecs-cli --version
+             chmod +x ./rundeck.sh
+             ./rundeck.sh     
 
