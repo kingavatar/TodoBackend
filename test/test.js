@@ -32,7 +32,7 @@ describe('Testing POSTS/shots endpoint', function () {
     const response = await request(app).post('/api/auth/signin').send({
           email:"saidhanush",
           password:"sai"
-      }).expect(404);
+      }).expect(302);
       
     });
     it('respond with valid HTTP status code and description and message', async ()=> {
@@ -50,7 +50,7 @@ describe('Testing POSTS/shots endpoint', function () {
       const response = await request(app).post('/api/auth/signin').send({
           email:"purvaj",
           password:"12345678"
-      }).expect(404);
+      }).expect(302);
     //   console.log(response);
     //   response.expect(404);
       
