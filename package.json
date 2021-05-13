@@ -6,7 +6,7 @@
   "scripts": {
     "start": "cross-env NENV=production node server",
     "dev": "cross-env NENV=development nodemon server",
-    "test": "jest"
+    "test": "jest --forceExit"
    },
   "repository": {
     "type": "git",
