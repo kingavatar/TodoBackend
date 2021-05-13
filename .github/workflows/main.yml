@@ -1,11 +1,16 @@
 name: toDoBackend Docker
 on:
   push:
-    branches: [ master ]
+    branches: [ frontend ]
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12.x]
+
     steps:
+<<<<<<< HEAD
       - name: Frontend UI
         uses: actions/checkout@v2
         with:
@@ -16,6 +21,15 @@ jobs:
         npm run build  
         ls
         pwd    
+=======
+      - uses: actions/checkout@v2
+      - name: Build and Test
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm install
+      - run: npm run test
+>>>>>>> 8da4a89b29ee618e0704aace3998a5a0651ad3e3
       - name: dockerLogin
         uses: docker/login-action@v1
         with:

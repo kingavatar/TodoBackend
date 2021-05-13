@@ -4,11 +4,10 @@
   "description": "The backend for todoOnline webapp",
   "main": "app.js",
   "scripts": {
-    "start": "cross-env NENV=production node app",
-    "dev": "cross-env NENV=development nodemon app",
-    "swaggerUi": "node swagger.js",
-    "test": "cross-env NENV=development jest"
-  },
+    "start": "cross-env NENV=production node server",
+    "dev": "cross-env NENV=development nodemon server",
+    "test": "jest"
+   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kingavatar/TodoBackend.git"

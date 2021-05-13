@@ -48,7 +48,6 @@ const NoteSchema = new mongoose.Schema(
 
 
 function isStringRequired() {
-  console.log(this.content);
   return typeof this.content === "string" ? false : true;
 }
 

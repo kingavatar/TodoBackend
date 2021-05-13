@@ -2,10 +2,12 @@ const Page = require("../models/Page");
 const User = require("../models/User");
 const Note = require("../models/Note");
 const mongoose = require("mongoose");
-
+const { ObjectId } = require("mongodb");
 async function getPages(req, res) {
   const user = await User.findById(req.payload._id);
-  const pages = await Page.find({ _id: { $in: user.pages } }).lean();
+  const pages = await Page.find({ _id: { $in: user.pages } })
+    .populate("notesIn")
+    .lean();
   
   res.json({ pages: pages });
 }
@@ -16,7 +18,13 @@ async function getPageById(req, res) {
   } catch (error) {
     res.status(404).send();
   }
-  console.log(page)
+  // const tempPage = await Page.findById(req.params.id);
+    // if(tempPage.notesIn!= page.notesIn)
+  // tempPage.notesIn
+  //   .filter((i) => page.notesIn.indexOf(i) === -1)
+  //   .forEach(async (i) => {
+  //     await Note.deleteOne({ _id: i });
+  //   });
   if (req.payload._id == page.ownerId || page.status == "public") {
     res.json({ page: page });
   } else {
@@ -54,7 +62,9 @@ async function updatePage(req, res) {
         pattern = new RegExp(
           "^[0-9A-F]{8}-[0-9A-F]{4}-[4][0-9A-F]{3}-[89AB][0-9A-F]{3}-[0-9A-F]{12}$",
           "i"
-        ); // Pattern to check uuidv4
+        ); 
+        
+        // Pattern to check uuidv4
         if (pattern.test(note._id)) {
           var temp = await Note.create({
             content: note.content,
@@ -65,9 +75,15 @@ async function updatePage(req, res) {
           });
           page.notesIn.push(temp._id);
         } else {
+          if(typeof note=='string'){
+            res.status(500).send();
+            return;
+             page.notesIn.push(note);
+          }
+          else{
           note.ownerId = req.payload._id;
           var temp = await Note.findOneAndUpdate(
-            { _id: note._id },
+            { _id: ObjectId(note._id) },
             note,
             {
               new: true,
@@ -75,23 +91,21 @@ async function updatePage(req, res) {
               upsert: true,
             }
           );
-          page.notesIn.push(note._id);
+          page.notesIn.push(temp._id);
+        }
         }
       } catch (err) {
         console.log(err);
         res.status(500).send();
       }
     }
-    const tempPage = await Page.findById(req.params.id);
-    tempPage.notesIn
-      .filter((i) => page.notesIn.indexOf(i) === -1)
-      .forEach(async (i) => {
-        await Note.deleteOne({ _id: i });
-      });
-    page = await Page.findOneAndUpdate({ _id: req.params.id }, page, {
+    
+    newPage = await Page.findOneAndUpdate({ _id: req.params.id }, page, {
       new: true,
       runValidators: true,
     });
+    // tempPage.notesIn = page.notesIn;
+    // tempPage.save();
     res.status(200).send();
   } catch (error) {
     console.log(error);
