@@ -22,4 +22,13 @@ jobs:
         with:
           push: true
           tags: todov100/todobackend:latest
+      - run: docker build --tag todo-app:latest .
+      - name: Push to ECR
+        id: ecr
+        uses: jwalton/gh-ecr-push@v1
+        with:
+          access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          region: ap-south-1
+          image: todo-app:latest    
 
