@@ -7,16 +7,9 @@ const session = require('express-session')
 const MongoStore = require('connect-mongo')(session)
 const cors = require("cors")
 const path = require("path")
-const swaggerUi = require("swagger-ui-express")
 const escFormat = require("@elastic/ecs-morgan-format")
 const cookieParser = require("cookie-parser")
-
-//Local requires
-const swaggerFile = require('./swagger_output.json')
-const ecsFormat = require('@elastic/ecs-morgan-format')
-// const { swaggerUi } = require('./swagger')
-// const { swaggerUi,specs } = require('./swagger')
-
+var fs = require("fs")
 
 
 //Configuration
@@ -26,21 +19,20 @@ dotenv.config({ path: './config/config.env' })
 require('./config/passport')(passport)
 
 //Confugration Varaibles
-const PORT = process.env.PORT
 const MODE = process.env.NENV
 const publicRoot = "./dist";
-
-
 
 //Application
 const app = express()
 
 //Logging
+var logFile = fs.createWriteStream(__dirname+"/logs/app.log",{flags: 'a'})
+
 if(MODE === 'development'){
     app.use(morgan('dev'))
 }
 else{
-  app.use(morgan(ecsFormat()))
+  app.use(morgan(ecsFormat(),{stream: logFile}))
 }
 
 //Parsing and rest api handling
@@ -49,27 +41,11 @@ app.use(express.json())
 app.use(cookieParser())
 app.use(express.static(publicRoot));
 
-
-app.use((req, res, next) => {
-  // res.setHeader("Access-Control-Allow-Origin", "http://localhost:8080/*");
-  // res.header(
-  //   "Access-Control-Allow-Headers",
-  //   "Origin, X-Requested-With, Content-Type, Accept"
-  // );
-  next();
-});
-//Static UI 
-
 //CORS Support
 var corsOptions = {
   origin: "http://localhost:3000",
-  // credentials: true,
-};
-  
+};  
 app.use(cors(corsOptions));
-
-
-
 
 
 //Middleware function to set the user details inside the req body
@@ -78,24 +54,21 @@ app.use(function (req,res,next){
     next()
 })
 
-//Swagger docs
-// app.use('/api-docs',swaggerUi.serve,swaggerUi.setup(specs))
-app.use('/doc',swaggerUi.serve,swaggerUi.setup(swaggerFile))
-
 
 // Sessions for remembering data
-app.use(
-    session({
-      secret: 'spurvaj',
-      resave: false,
-      saveUninitialized: false,
-      store: new MongoStore({ mongooseConnection: mongoose.connection }),
-    })
-  )
+// app.use(
+//     session({
+//       secret: 'spurvaj',
+//       resave: false,
+//       saveUninitialized: false,
+//       store: new MongoStore({ mongooseConnection: mongoose.connection }),
+//     })
+//   )
+
+
 
 //Passport initiliazation
 app.use(passport.initialize())
-// app.use(passport.session())
 
 
 app.use('/api',require('./routes/index'))

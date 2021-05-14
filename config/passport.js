@@ -49,8 +49,7 @@ module.exports = function (passport) {
       usernameField: 'email',
       passwordField: 'password'
   },
-    function(email, password, done) {
-      console.log("Logging in ",email)
+    async function(email, password, done) {
       User.findOne({ email: email }, function (err, user) {
         if (err) { 
           return done(err); 

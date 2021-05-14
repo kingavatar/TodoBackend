@@ -9,7 +9,7 @@ const {
   localSignup,
   logout,
   socialCallback,
-  getUserDetails
+  getUserDetails,
 } = require("../controllers/auth");
 //Middleware
 const { ensureGuest, verifyToken } = require('../middleware/auth')
@@ -38,7 +38,8 @@ router.get(
 
 router.get("/social",verifyToken, getUserDetails);
 
-router.post('/signin', passport.authenticate('local', { failureRedirect: '/login' }),loginCallback);
+router.post('/signin', passport.authenticate('local'),loginCallback);
+
 router.post('/signup',ensureGuest,localSignup)
 
 router.get("/logout", logout);

@@ -46,7 +46,7 @@ module.exports = {
 	else if(payload == undefined){
 	  return res.status(407).send()	
 	}
-	console.log(payload == undefined)	
+	// console.log(payload == undefined)	
         req.payload = payload.user
         next()
       })

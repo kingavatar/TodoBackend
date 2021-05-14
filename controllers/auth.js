@@ -53,8 +53,6 @@ async function logout(req,res){
 }
 
 
-
-
 module.exports = {
   loginCallback,
   localSignup,
