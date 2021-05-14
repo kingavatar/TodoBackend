@@ -7,7 +7,7 @@ const session = require('express-session')
 const MongoStore = require('connect-mongo')(session)
 const cors = require("cors")
 const path = require("path")
-const escFormat = require("@elastic/ecs-morgan-format")
+const ecsFormat = require("@elastic/ecs-morgan-format")
 const cookieParser = require("cookie-parser")
 var fs = require("fs")
 

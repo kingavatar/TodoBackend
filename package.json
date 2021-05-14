@@ -3,12 +3,11 @@
   "version": "1.0.0",
   "description": "The backend for todoOnline webapp",
   "main": "app.js",
-
   "scripts": {
     "start": "cross-env NENV=production node server",
     "dev": "cross-env NENV=development nodemon server",
     "test": "jest --forceExit"
-   },
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kingavatar/TodoBackend.git"
@@ -54,5 +53,5 @@
   },
   "jest": {
     "testEnvironment": "node"
-}
+  }
 }
