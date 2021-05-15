@@ -1,5 +1,8 @@
 #!/bin/bash
-echo "$ENV"
+# APP URL
+# frontend build
+# move f build to backend
+
 if [ "$ENV" = "PROD" ]
     then
         npm run start
