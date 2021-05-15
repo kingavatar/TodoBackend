@@ -25,14 +25,15 @@ const publicRoot = "./dist";
 //Application
 const app = express()
 
-//Logging
-var logFile = fs.createWriteStream(__dirname+"/logs/app.log",{flags: 'a'})
+// var logFile = fs.createWriteStream(__dirname+"/logs/app.log",{flags: 'a'})
 
 if(MODE === 'development'){
     app.use(morgan('dev'))
 }
 else{
-  app.use(morgan(ecsFormat(),{stream: logFile}))
+  // app.use(morgan(ecsFormat({format:'tiny'}),{stream: logFile}))
+  app.use(morgan(ecsFormat({format:'tiny'})))
+
 }
 
 //Parsing and rest api handling
@@ -43,7 +44,7 @@ app.use(express.static(publicRoot));
 
 //CORS Support
 var corsOptions = {
-  origin: "http://localhost:3000",
+  origin: process.env.APP_URL+":"+process.env.PORT,
 };  
 app.use(cors(corsOptions));
 
@@ -53,19 +54,6 @@ app.use(function (req,res,next){
     res.locals.user = req.user || null
     next()
 })
-
-
-// Sessions for remembering data
-// app.use(
-//     session({
-//       secret: 'spurvaj',
-//       resave: false,
-//       saveUninitialized: false,
-//       store: new MongoStore({ mongooseConnection: mongoose.connection }),
-//     })
-//   )
-
-
 
 //Passport initiliazation
 app.use(passport.initialize())

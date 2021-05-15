@@ -1,12 +1,21 @@
 version: '3'
+
 services:
-  web:
-    image: 562697342329.dkr.ecr.ap-south-1.amazonaws.com/todo-app:latest
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: todov100/todobackend:latest
     ports:
-      - "3000:3000"
-    logging:
-      driver: awslogs
-      options:
-        awslogs-group: todo-cluster-cmdl
-        awslogs-region: ap-south-1
-        awslogs-stream-prefix: web
+     - "3000:3000"
+  filebeat:
+    hostname: filebeat
+    build:
+      context: filebeat
+      dockerfile: Dockerfile
+    image: todov100/filebeats:latest
+    volumes:
+     - "/var/lib/docker/containers:/usr/share/dockerlogs/data:ro"
+     - "/var/run/docker.sock:/var/run/docker.sock"
+
+      

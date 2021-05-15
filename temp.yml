@@ -1,0 +1,12 @@
+version: '3'
+services:
+  web:
+    image: 562697342329.dkr.ecr.ap-south-1.amazonaws.com/todo-app:latest
+    ports:
+      - "3000:3000"
+    logging:
+      driver: awslogs
+      options:
+        awslogs-group: todo-cluster-cmdl
+        awslogs-region: ap-south-1
+        awslogs-stream-prefix: web

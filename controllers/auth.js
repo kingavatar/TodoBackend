@@ -1,6 +1,3 @@
-const { response } = require("express");
-const { JsonWebTokenError } = require("jsonwebtoken");
-const { ONEDAY } = require("../config/constants");
 const { generateToken } = require("../helpers/jwt");
 const User = require("../models/User");
 
@@ -13,7 +10,8 @@ async function loginCallback(req,res){
 
 async function socialCallback(req, res) {
   const token = await generateToken(req, res, req.user);
-  res.redirect("http://localhost:3000/redirect?token=" + token);
+  const uri = process.env.APP_URL+":"+process.env.PORT;
+  res.redirect(uri+"/redirect?token=" + token);
 
 }
 

@@ -25,8 +25,6 @@ async function getUserStatus(req,res){
 }
 async function getStats(req,res){
     if(req.user.firstName != "admin" || req.user.email!=constants.ADMIN_EMAIL){
-        //RETURN ERROR IN PAGE AS ONLY ADMIN HAS PERMISSION
-        // res.render('')
         res.status(500)
     }
     else{
@@ -40,4 +38,9 @@ async function getStats(req,res){
     }
 }
 
-module.exports = { getLandingPage, getDashboard, getStats, getUserStatus }
+async function downloadLogs(req,res){
+    const file = "./logs/app.log"
+    res.download(file)
+}
+
+module.exports = { getLandingPage, getDashboard, getStats, getUserStatus, downloadLogs }
