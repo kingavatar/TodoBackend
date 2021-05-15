@@ -45,7 +45,7 @@ app.use(express.static(publicRoot));
 
 //CORS Support
 var corsOptions = {
-  origin: process.env.APP_URL+":"+process.env.PORT,
+  origin: process.env.APP_URL,//+":"+process.env.PORT,
 };  
 app.use(cors(corsOptions));
 
