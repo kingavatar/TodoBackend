@@ -25,14 +25,15 @@ const publicRoot = "./dist";
 //Application
 const app = express()
 
-// var logFile = fs.createWriteStream(__dirname+"/logs/app.log",{flags: 'a'})
+var logFile = fs.createWriteStream(__dirname+"/logs/app.log",{flags: 'a'})
 
 if(MODE === 'development'){
     app.use(morgan('dev'))
 }
 else{
-  // app.use(morgan(ecsFormat({format:'tiny'}),{stream: logFile}))
-  app.use(morgan(ecsFormat({format:'tiny'})))
+  
+  app.use(morgan(ecsFormat({format:'tiny'}),{stream: logFile}))
+  // app.use(morgan(ecsFormat({format:'tiny'})))
 
 }
 
