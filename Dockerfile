@@ -1,4 +1,4 @@
-FROM node:12-alpine
+FROM node:12-buster-slim
 ENV ENV="PROD"
 
 WORKDIR /usr/src/app
